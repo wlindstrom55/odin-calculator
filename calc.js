@@ -6,12 +6,10 @@ let secondOperator = null;
 let result = null;
 const buttons = document.querySelectorAll('button'); //all buttons selected here
 
-const input = document.querySelector('.input');
-
 //this event listener, for each key pressed, takes the keyCode returned from the
 //keypress event and finds the button associated with it, and simulates a 'click' on it
 window.addEventListener('keydown', function(e){
-    const key = document.querySelector(`button[data-key='$e.keyCode}']`);
+    const key = document.querySelector(`button[data-key='${e.keyCode}']`);
     key.click();
 })
 
@@ -28,36 +26,35 @@ popDisplay(); //run
 
 //this method will route our button presses to functions that determine 
 //behavior for all of all our different buttons when pressed
-function buttons() {
-    for(let i = 0; i <= buttons.length; i++) {
+function routeButtons() {
+    for(let i = 0; i < buttons.length; i++) {
         buttons[i].addEventListener('click', function() {
-        if(buttons[i].classList.contains('operand')) {
+        if(buttons[i].classList.contains('operand')) { //class check for button type
             inputOperand(buttons[i].value);
-            updateDisplay();
+            popDisplay();
         } else if(buttons[i].classList.contains('operator')) {
             inputOperator(buttons[i].value);
         } else if(buttons[i].classList.contains('equals')) {
             inputEquals();
-            updateDisplay();
+            popDisplay();
         } else if(buttons[i].classList.contains('decimal')) {
             inputDecimal(buttons[i].value);
-            updateDisplay();
+            popDisplay();
         } else if(buttons[i].classList.contains('percent')) {
             inputPercent(displayVal);
-            updateDisplay();
+            popDisplay();
         } else if(buttons[i].classList.contains('sign')) {
             inputSign(displayVal);
-            updateDisplay();
+            popDisplay();
         } else if(buttons[i].classList.contains('clear'))
             clearDisplay();
-            updateDisplay();
+            popDisplay();
         })}
-    digits.style.gridTemplateColumns = 'repeat(100px, 1fr)'; //these may not be necessary
-    digits.style.gridTemplateRows = 'repeat(100px, 1fr)';
+    //digits.style.gridTemplateColumns = 'repeat(100px, 1fr)'; //these may not be necessary
+    //digits.style.gridTemplateRows = 'repeat(100px, 1fr)';
 }
 
-buttons(); //run
-
+routeButtons(); //run
 
 function inputOperand(operand) {
     if(firstOperator === null) { //if firstOperator strictly equals null
@@ -108,24 +105,24 @@ function inputEquals() {
     } else if(secondOperator != null) {
         //handles final result
         secondOperand = displayVal;
-        result = operate(Number(firstOperand), Number(secondOperand), secondOperator);
-        if(result === 'lmao') {
-            displayVal = 'lmao';
-        } else {
+        result = operate(Number(firstOperand), Number(secondOperand), secondOperator); //calc done here
+        if(result === '80085') { //in case divide by 0
+            displayVal = '80085';
+        } else { //return val
             displayVal = roundAccurately(result, 15).toString();
-            firstOperand = displayVal;
-            secondOperand = null;
+            firstOperand = displayVal; //set firstoperand to show on display
+            secondOperand = null; // then reset everything
             firstOperator = null;
             secondOperator = null;
-            result = null;
+            result = null; 
         }
     } else {
         //handles first operation
         secondOperand = displayVal;
         result = operate(Number(firstOperand), Number(secondOperand), firstOperator);
-        if(result === 'lmao') {
-            displayVal = 'lmao';
-        } else {
+        if(result === '80085') {
+            displayVal = '80085';
+        } else { //return val
             displayVal = roundAccurately(result, 15).toString();
             firstOperand = displayVal;
             secondOperand = null;
@@ -133,6 +130,45 @@ function inputEquals() {
             secondOperator = null;
             result = null;
         }
+    }
+}
+
+function inputDecimal(dot) {
+    if(displayVal === firstOperand || displayVal === secondOperand) {
+        displayVal = '0';
+        displayVal += dot;
+    } else if(!displayVal.includes(dot)) { //if there's another decimal, only one is included.
+        displayVal += dot;
+    } 
+}
+
+function inputPercent(num) {
+    displayVal = (num/100).toString();
+}
+
+function inputSign(num) { 
+    displayVal = (num * -1).toString();
+}
+
+function roundAccurately(num, places) {
+    //parsefloat parses our argument, returns fp number
+    //our arg is the number to the 15th place then rounded, then truncated back down 15 places.
+    return parseFloat(Math.round(num + 'e' + places) + 'e-' + places);
+}
+
+function clearDisplay() { //reset
+    displayVal = '0';
+    firstOperand = null;
+    secondOperand = null;
+    firstOperator = null;
+    secondOperator = null;
+    result = null;
+}
+
+function inputBackspace() {
+    if(firstOperand != null) {
+        firstOperand = null;
+        popDisplay();
     }
 }
 
@@ -152,37 +188,22 @@ function divide(a, b) {
     return a / b;
 }
 
-function operate(operator, a, b) {
+function operate(a, b, operator) {
     let result;
-    if(operator == add) {
+    if(operator == '+') {
         result = add(a,b);
     }
-    if(operator == subtract) {
+    else if(operator == '-') {
         result = subtract(a,b);
     }
-    if( operator == multiply) {
+    else if( operator == '*') {
         result = multiply(a,b);
     }
-    if(operator == divide) {
+     else if(operator == '/') {
+        if (b == 0) {
+            return '80085';
+        }
         result = divide(a,b);
     }
     return result;
 }
-
-
-
-// function popOperatorButtons() {
-//     const operator = document.createElement('div');
-//     operator.classList.add('operators');
-//     input.append(operator);
-//     let operations = ['+', '-', '*', '/', '='];
-//     for (let i = 0; i < operations.length; i++) {
-//         const ops = document.createElement('button');
-//         ops.innerHTML = `${operations[i]}`;
-//         ops.classList.add(`operatorB${i}`);
-//         operator.append(ops);
-//     }
-// }
-
-
-// start
