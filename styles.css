@@ -42,6 +42,7 @@ body {
     flex-wrap: nowrap;
     margin: 0;
     background-color: lightblue;
+    border-radius: 20px;
 }
 
 .operatorB4 {
@@ -54,7 +55,7 @@ body {
     box-shadow: 0px 0px 20px black;
     margin: 0;
     height: 600px;
-    width: 100px;
+    width: 200px;
     background-color: black;
 }
 .digits {
