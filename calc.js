@@ -8,6 +8,7 @@ const buttons = document.querySelectorAll('button'); //all buttons selected here
 
 //this event listener, for each key pressed, takes the keyCode returned from the
 //keypress event and finds the button associated with it, and simulates a 'click' on it
+//doesnt sync up with my operator keys though - try to research
 window.addEventListener('keydown', function(e){
     const key = document.querySelector(`button[data-key='${e.keyCode}']`);
     key.click();
@@ -80,7 +81,7 @@ function inputOperator(operator) {
         secondOperator = operator;
         secondOperand = displayVal;
         result = operate(Number(firstOperand), Number(secondOperand), firstOperator);
-        displayVal = roundAccurately(result, 15).toString();
+        displayVal = roundAccurately(result, 10).toString();
         firstOperand = displayVal;
         result = null;
     } else if(firstOperator != null && secondOperator != null) {
@@ -88,7 +89,7 @@ function inputOperator(operator) {
         secondOperand = displayVal;
         result = operate(Number(firstOperand), Number(secondOperand), secondOperator);
         secondOperator = operator;
-        displayVal = roundAccurately(result, 15).toString();
+        displayVal = roundAccurately(result, 10).toString();
         firstOperand = displayVal;
         result = null;
     } else { 
@@ -109,7 +110,7 @@ function inputEquals() {
         if(result === '80085') { //in case divide by 0
             displayVal = '80085';
         } else { //return val
-            displayVal = roundAccurately(result, 15).toString();
+            displayVal = roundAccurately(result, 10).toString();
             firstOperand = displayVal; //set firstoperand to show on display
             secondOperand = null; // then reset everything
             firstOperator = null;
@@ -123,7 +124,7 @@ function inputEquals() {
         if(result === '80085') {
             displayVal = '80085';
         } else { //return val
-            displayVal = roundAccurately(result, 15).toString();
+            displayVal = roundAccurately(result, 10).toString();
             firstOperand = displayVal;
             secondOperand = null;
             firstOperator = null;
